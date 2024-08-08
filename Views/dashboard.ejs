@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <h1>Dashboard</h1>
+
+    <!-- One-Time Expense Form -->
+    <h2>Add One-Time Expense</h2>
+    <form action="/add-expense" method="POST">
+        <label for="type">Expense Type:</label>
+        <select name="type" required>
+            <option value="Property Rent/Lease">Property Rent/Lease</option>
+            <option value="Renovation & Interiors">Renovation & Interiors</option>
+            <option value="Gym Equipment">Gym Equipment</option>
+            <option value="Initial Inventory">Initial Inventory</option>
+            <option value="Licenses & Permits">Licenses & Permits</option>
+            <option value="Marketing & Advertising">Marketing & Advertising</option>
+            <option value="Legal & Consultancy Fees">Legal & Consultancy Fees</option>
+            <option value="Insurance">Insurance</option>
+        </select>
+        <label for="description">Description:</label>
+        <input type="text" name="description" required>
+        <label for="amount">Amount:</label>
+        <input type="number" name="amount" required>
+        <button type="submit">Add Expense</button>
+    </form>
+
+    <!-- User Registration Form -->
+    <h2>Register New User</h2>
+    <form action="/add-user" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" name="name" required>
+        <label for="dob">Date of Birth:</label>
+        <input type="date" name="dob" required>
+        <label for="fee">Fee:</label>
+        <input type="number" id="fee" name="fee" required>
+        <label for="feeType">Fee Type:</label>
+        <select id="feeType" name="feeType" required>
+            <option value="One Month" data-fee="1200">One Month - ₹1200</option>
+            <option value="Three Months" data-fee="3400">Three Months - ₹3400</option>
+            <option value="One Year" data-fee="12500">One Year - ₹12500</option>
+        </select>
+        <button type="submit">Register User</button>
+    </form>
+
+    <!-- Filter Users -->
+    <h2>Filter Users</h2>
+    <a href="/?filter=oneMonth">One Month</a>
+    <a href="/?filter=threeMonths">Three Months</a>
+    <a href="/?filter=oneYear">One Year</a>
+
+    <!-- Display Expenses -->
+    <h2>One-Time Expenses</h2>
+    <ul>
+        <% expenses.forEach(expense=> { %>
+            <li>
+                <%= expense.type %> - ₹<%= expense.amount %> (<%= expense.description %>)
+            </li>
+            <% }) %>
+    </ul>
+
+    <!-- Display Users -->
+    <h2>Registered Users</h2>
+    <ul>
+        <% users.forEach(user=> { %>
+            <li>
+                <%= user.name %> - ₹<%= user.fee %> (<%= user.feeType %>) - DOB: <%= user.dob.toDateString() %>
+            </li>
+            <% }) %>
+    </ul>
+
+    <!-- Summary -->
+    <h2>Summary</h2>
+    <p>Total One-Time Expenses: ₹<%= totalExpenses %>
+    </p>
+    <p>Total User Payments: ₹<%= totalPayments %>
+    </p>
+    <p>Profit/Loss: ₹<%= totalPayments - totalExpenses %>
+    </p>
+
+    <script>
+        document.getElementById('feeType').addEventListener('change', function () {
+            const selectedOption = this.options[this.selectedIndex];
+            const fee = selectedOption.getAttribute('data-fee');
+            document.getElementById('fee').value = fee;
+        });
+
+        // Set initial fee based on the default selected option
+        document.addEventListener('DOMContentLoaded', function () {
+            const feeType = document.getElementById('feeType');
+            const selectedOption = feeType.options[feeType.selectedIndex];
+            const fee = selectedOption.getAttribute('data-fee');
+            document.getElementById('fee').value = fee;
+        });
+    </script>
+</body>
+
+</html>
